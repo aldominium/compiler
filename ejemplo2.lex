@@ -56,6 +56,8 @@ NL  = \n | \r | \r\n
 /*reserved words*/
 "begin"    {return Parser.BEGIN;}
 "end"      {return Parser.END;}
+"if"      {return Parser.IF;}
+"then"      {return Parser.THEN;}
 "print"    {return Parser.PRINT;}
 "read"     {return Parser.READ;}
 ":="     {return Parser.EQUALS;}

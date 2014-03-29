@@ -25,7 +25,10 @@
 %{
   import java.io.*;
   import java.util.*;
+
+  
 %}
+
       
 %token NL          /* newline  */
 %token BEGIN          /* begin  */
@@ -33,16 +36,21 @@
 %token PRINT          /* print  */
 %token READ          /* read  */
 %token EQUALS        /*:=*/
+%token IF        /*:=*/
+%token THEN        /*:=*/
 
 
 
 %token <dval> NUM  /* a number */
 %token <sval> ID
 
-%type <dval> expr
+%type <obj> expr
+%type <obj> expresion
+%type <obj> stmt
+%type <obj> stmt_lst
 
-%type <dval> term
-%type <dval> factor
+%type <obj> term
+%type <obj> factor
 
 
 %left '-' '+'
@@ -56,67 +64,80 @@
 
 
 prg:  BEGIN stmt_lst END  { 
-                          
+                            System.out.println("prg");
+                           nodoInicial = new Nodo(null,";",(Nodo)$2);
                           }
 ;
 
-
-stmt_lst: stmt ';' stmt_lst  {/*System.out.println("entre stmt_lst");*/}
-          |                  {}
-;
-
 stmt: ID EQUALS expr         {
-                              simbolos.put($1,$3);
-                              /*System.out.println($1 + " es igual a: "+ simbolos.get($1));*/
-                              
+                              simbolos.put($1,0.0);
+                              System.out.println("stmt");
+                              $$ = new Nodo(new Nodo("ID",$1),":=",(Nodo)$3);
+                             }
+    |IF expresion THEN stmt  {
+                              $$ = new Nodo((Nodo)$2,"IF",(Nodo)$4);
+                             }
+    |BEGIN stmt_lst END      {
+                              $$ = (Nodo)$2;
                              }
     | PRINT expr             {
-                              System.out.println("Expresion igual a: " + $2);
+                              System.out.println("stmt");
+                              $$ = new Nodo("PRINT",(Nodo)$2);
                              }
-    ;
-    | READ ID                {/*
-                              if(simbolos.containsKey($2))
-                                System.out.println("Valor de: " + $2 + " "+simbolos.get($2));
-                              else
-                                System.out.println("0.0");*/
-                              Scanner in = new Scanner(System.in);
-                              Double miValor = in.nextDouble();
-                              simbolos.put($2,miValor);
+    | READ ID                {
+                              simbolos.put($2,0.0);
+                              $$ = new Nodo("READ",new Nodo("ID",$2));
                              }
 ;
 
 
-
-expr: expr '+' term          {$$ = $1 + $3;}
-    | expr '-' term         {$$ = $1 - $3;}
-    | term                   {/*System.out.println("entre expr");
-                              $$ = $1;*/}
+stmt_lst: stmt ';' stmt_lst  {
+                              System.out.println("stmt_lst");
+                              $$ = new Nodo((Nodo)$1,";",(Nodo)$3);
+                             }
+          |                  {$$ = null;}
 ;
 
-term: term '*' factor        {$$ = $1 * $3;}
-    | term '/' factor        {$$ = $1 / $3;}
-    | factor                 {/*System.out.println("entre term");
-                              $$ = $1;*/}
+
+expresion: expr '<' expr     {$$ = new Nodo((Nodo)$1,"<",(Nodo)$3);}
+          | expr '>' expr    {$$ = new Nodo((Nodo)$1,">",(Nodo)$3);}
+          | expr '=' expr    {$$ = new Nodo((Nodo)$1,"=",(Nodo)$3);}
 ;
 
-factor: '(' expr ')'         {$$ = $2;}
+
+expr: expr '+' term          {$$ = new Nodo((Nodo)$1,"+",(Nodo)$3);}
+    | expr '-' term         {$$ = new Nodo((Nodo)$1,"-",(Nodo)$3);}
+    | term                   {System.out.println("entre expr");
+                              $$ = $1;
+                              }
+;
+
+
+term: term '*' factor        {$$ = new Nodo((Nodo)$1,"*",(Nodo)$3);}
+    | term '/' factor        {$$ = new Nodo((Nodo)$1,"/",(Nodo)$3);}
+    | factor                 {System.out.println("entre term");
+                              $$ = $1;
+                             }
+;
+
+
+factor: '(' expr ')'         {$$ = (Nodo)$2;}
       | ID                   {
-                              if(simbolos.containsKey($1)){
-                                /*System.out.println("valor simbolo factor:"+ simbolos.get($1));*/
-                                $$ = simbolos.get($1);
-
-                              }
-                              else{
-                                /*System.out.println("valor simbolo factor:"+ simbolos.get($1));*/
-                                simbolos.put($1,0.0);
-                                $$ = 0.0;
-                              }
+                              System.out.println("factor id" + $1);
+                              simbolos.put($1,0.0);
+                              $$ = new Nodo("ID",$1);
                              }
-      | NUM                  {$$ = $1;}
+      | NUM                  {
+                              System.out.println("factor num");
+                              $$ = new Nodo("NUM",$1);
+                              }
 
 %%
-  Hashtable<String, Double> simbolos
+  static Hashtable<String, Double> simbolos
      = new Hashtable<String, Double>();
+
+  static Nodo nodoInicial;
+
 
   private Yylex lexer;
 
@@ -159,5 +180,33 @@ factor: '(' expr ')'         {$$ = $2;}
 
 
     yyparser.yyparse();
+
+    Nodo inicio = nodoInicial.getRightChild();
+    
+    inicio.imprimir();
+    
+    /*
+    System.out.println("Tipo hijo der izq der der : "+inicio.getRightChild().getLeftChild().getRightChild().getRightChild().getKind());
+    
+    System.out.println("Tipo hijo der izq der der : "+inicio.getRightChild().getLeftChild().getRightChild().getRightChild().getLeftChild().getLeftChild().getKind());
+
+    System.out.println("Tipo hijo der izq der der : "+inicio.getRightChild().getLeftChild().getRightChild().getRightChild().getLeftChild().getLeftChild().getID());
+
+    System.out.println("Tipo hijo der izq der der : "+inicio.getRightChild().getLeftChild().getRightChild().getRightChild().getLeftChild().getRightChild().getValor());
+    
+    System.out.println("Tipo hijo der izq der der : "+inicio.getRightChild().getLeftChild().getRightChild().getRightChild().getLeftChild().getRightChild().getRightChild().getKind());
+
+    System.out.println("Tipo hijo der izq der der : "+inicio.getRightChild().getLeftChild().getRightChild().getRightChild().getLeftChild().getRightChild().getRightChild().getValor());
+    
+    System.out.println(simbolos.size());
+    */
+    System.out.println();
+    System.out.println();
+    System.out.println();
+
+    /*System.out.println("Valor hijo der izq izq  : "+inicio.getRightChild().getRightChild().getLeftChild().getLeftChild().getID());*/
+
+    Interprete interprete = new Interprete();
+    interprete.parseProgram(inicio,simbolos);
     
   }
