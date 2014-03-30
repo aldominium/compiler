@@ -64,14 +64,12 @@
 
 
 prg:  BEGIN stmt_lst END  { 
-                            System.out.println("prg");
                            nodoInicial = new Nodo(null,";",(Nodo)$2);
                           }
 ;
 
 stmt: ID EQUALS expr         {
                               simbolos.put($1,0.0);
-                              System.out.println("stmt");
                               $$ = new Nodo(new Nodo("ID",$1),":=",(Nodo)$3);
                              }
     |IF expresion THEN stmt  {
@@ -81,7 +79,6 @@ stmt: ID EQUALS expr         {
                               $$ = (Nodo)$2;
                              }
     | PRINT expr             {
-                              System.out.println("stmt");
                               $$ = new Nodo("PRINT",(Nodo)$2);
                              }
     | READ ID                {
@@ -92,7 +89,6 @@ stmt: ID EQUALS expr         {
 
 
 stmt_lst: stmt ';' stmt_lst  {
-                              System.out.println("stmt_lst");
                               $$ = new Nodo((Nodo)$1,";",(Nodo)$3);
                              }
           |                  {$$ = null;}
@@ -107,7 +103,7 @@ expresion: expr '<' expr     {$$ = new Nodo((Nodo)$1,"<",(Nodo)$3);}
 
 expr: expr '+' term          {$$ = new Nodo((Nodo)$1,"+",(Nodo)$3);}
     | expr '-' term         {$$ = new Nodo((Nodo)$1,"-",(Nodo)$3);}
-    | term                   {System.out.println("entre expr");
+    | term                   {
                               $$ = $1;
                               }
 ;
@@ -115,7 +111,7 @@ expr: expr '+' term          {$$ = new Nodo((Nodo)$1,"+",(Nodo)$3);}
 
 term: term '*' factor        {$$ = new Nodo((Nodo)$1,"*",(Nodo)$3);}
     | term '/' factor        {$$ = new Nodo((Nodo)$1,"/",(Nodo)$3);}
-    | factor                 {System.out.println("entre term");
+    | factor                 {
                               $$ = $1;
                              }
 ;
@@ -123,12 +119,10 @@ term: term '*' factor        {$$ = new Nodo((Nodo)$1,"*",(Nodo)$3);}
 
 factor: '(' expr ')'         {$$ = (Nodo)$2;}
       | ID                   {
-                              System.out.println("factor id" + $1);
                               simbolos.put($1,0.0);
                               $$ = new Nodo("ID",$1);
                              }
       | NUM                  {
-                              System.out.println("factor num");
                               $$ = new Nodo("NUM",$1);
                               }
 
@@ -183,28 +177,6 @@ factor: '(' expr ')'         {$$ = (Nodo)$2;}
 
     Nodo inicio = nodoInicial.getRightChild();
     
-    inicio.imprimir();
-    
-    /*
-    System.out.println("Tipo hijo der izq der der : "+inicio.getRightChild().getLeftChild().getRightChild().getRightChild().getKind());
-    
-    System.out.println("Tipo hijo der izq der der : "+inicio.getRightChild().getLeftChild().getRightChild().getRightChild().getLeftChild().getLeftChild().getKind());
-
-    System.out.println("Tipo hijo der izq der der : "+inicio.getRightChild().getLeftChild().getRightChild().getRightChild().getLeftChild().getLeftChild().getID());
-
-    System.out.println("Tipo hijo der izq der der : "+inicio.getRightChild().getLeftChild().getRightChild().getRightChild().getLeftChild().getRightChild().getValor());
-    
-    System.out.println("Tipo hijo der izq der der : "+inicio.getRightChild().getLeftChild().getRightChild().getRightChild().getLeftChild().getRightChild().getRightChild().getKind());
-
-    System.out.println("Tipo hijo der izq der der : "+inicio.getRightChild().getLeftChild().getRightChild().getRightChild().getLeftChild().getRightChild().getRightChild().getValor());
-    
-    System.out.println(simbolos.size());
-    */
-    System.out.println();
-    System.out.println();
-    System.out.println();
-
-    /*System.out.println("Valor hijo der izq izq  : "+inicio.getRightChild().getRightChild().getLeftChild().getLeftChild().getID());*/
 
     Interprete interprete = new Interprete();
     interprete.parseProgram(inicio,simbolos);

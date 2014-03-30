@@ -313,7 +313,7 @@ final static String yyrule[] = {
 "factor : NUM",
 };
 
-//#line 136 "ejemplo2.y"
+//#line 130 "ejemplo2.y"
   static Hashtable<String, Double> simbolos
      = new Hashtable<String, Double>();
 
@@ -364,34 +364,12 @@ final static String yyrule[] = {
 
     Nodo inicio = nodoInicial.getRightChild();
     
-    inicio.imprimir();
-    
-    /*
-    System.out.println("Tipo hijo der izq der der : "+inicio.getRightChild().getLeftChild().getRightChild().getRightChild().getKind());
-    
-    System.out.println("Tipo hijo der izq der der : "+inicio.getRightChild().getLeftChild().getRightChild().getRightChild().getLeftChild().getLeftChild().getKind());
-
-    System.out.println("Tipo hijo der izq der der : "+inicio.getRightChild().getLeftChild().getRightChild().getRightChild().getLeftChild().getLeftChild().getID());
-
-    System.out.println("Tipo hijo der izq der der : "+inicio.getRightChild().getLeftChild().getRightChild().getRightChild().getLeftChild().getRightChild().getValor());
-    
-    System.out.println("Tipo hijo der izq der der : "+inicio.getRightChild().getLeftChild().getRightChild().getRightChild().getLeftChild().getRightChild().getRightChild().getKind());
-
-    System.out.println("Tipo hijo der izq der der : "+inicio.getRightChild().getLeftChild().getRightChild().getRightChild().getLeftChild().getRightChild().getRightChild().getValor());
-    
-    System.out.println(simbolos.size());
-    */
-    System.out.println();
-    System.out.println();
-    System.out.println();
-
-    /*System.out.println("Valor hijo der izq izq  : "+inicio.getRightChild().getRightChild().getLeftChild().getLeftChild().getID());*/
 
     Interprete interprete = new Interprete();
     interprete.parseProgram(inicio,simbolos);
     
   }
-//#line 323 "Parser.java"
+//#line 301 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -548,115 +526,109 @@ boolean doaction;
 case 1:
 //#line 66 "ejemplo2.y"
 { 
-                            System.out.println("prg");
                            nodoInicial = new Nodo(null,";",(Nodo)val_peek(1).obj);
                           }
 break;
 case 2:
-//#line 72 "ejemplo2.y"
+//#line 71 "ejemplo2.y"
 {
                               simbolos.put(val_peek(2).sval,0.0);
-                              System.out.println("stmt");
                               yyval.obj = new Nodo(new Nodo("ID",val_peek(2).sval),":=",(Nodo)val_peek(0).obj);
                              }
 break;
 case 3:
-//#line 77 "ejemplo2.y"
+//#line 75 "ejemplo2.y"
 {
                               yyval.obj = new Nodo((Nodo)val_peek(2).obj,"IF",(Nodo)val_peek(0).obj);
                              }
 break;
 case 4:
-//#line 80 "ejemplo2.y"
+//#line 78 "ejemplo2.y"
 {
                               yyval.obj = (Nodo)val_peek(1).obj;
                              }
 break;
 case 5:
-//#line 83 "ejemplo2.y"
+//#line 81 "ejemplo2.y"
 {
-                              System.out.println("stmt");
                               yyval.obj = new Nodo("PRINT",(Nodo)val_peek(0).obj);
                              }
 break;
 case 6:
-//#line 87 "ejemplo2.y"
+//#line 84 "ejemplo2.y"
 {
                               simbolos.put(val_peek(0).sval,0.0);
                               yyval.obj = new Nodo("READ",new Nodo("ID",val_peek(0).sval));
                              }
 break;
 case 7:
-//#line 94 "ejemplo2.y"
+//#line 91 "ejemplo2.y"
 {
-                              System.out.println("stmt_lst");
                               yyval.obj = new Nodo((Nodo)val_peek(2).obj,";",(Nodo)val_peek(0).obj);
                              }
 break;
 case 8:
-//#line 98 "ejemplo2.y"
+//#line 94 "ejemplo2.y"
 {yyval.obj = null;}
 break;
 case 9:
-//#line 102 "ejemplo2.y"
+//#line 98 "ejemplo2.y"
 {yyval.obj = new Nodo((Nodo)val_peek(2).obj,"<",(Nodo)val_peek(0).obj);}
 break;
 case 10:
-//#line 103 "ejemplo2.y"
+//#line 99 "ejemplo2.y"
 {yyval.obj = new Nodo((Nodo)val_peek(2).obj,">",(Nodo)val_peek(0).obj);}
 break;
 case 11:
-//#line 104 "ejemplo2.y"
+//#line 100 "ejemplo2.y"
 {yyval.obj = new Nodo((Nodo)val_peek(2).obj,"=",(Nodo)val_peek(0).obj);}
 break;
 case 12:
-//#line 108 "ejemplo2.y"
+//#line 104 "ejemplo2.y"
 {yyval.obj = new Nodo((Nodo)val_peek(2).obj,"+",(Nodo)val_peek(0).obj);}
 break;
 case 13:
-//#line 109 "ejemplo2.y"
+//#line 105 "ejemplo2.y"
 {yyval.obj = new Nodo((Nodo)val_peek(2).obj,"-",(Nodo)val_peek(0).obj);}
 break;
 case 14:
-//#line 110 "ejemplo2.y"
-{System.out.println("entre expr");
+//#line 106 "ejemplo2.y"
+{
                               yyval.obj = val_peek(0).obj;
                               }
 break;
 case 15:
-//#line 116 "ejemplo2.y"
+//#line 112 "ejemplo2.y"
 {yyval.obj = new Nodo((Nodo)val_peek(2).obj,"*",(Nodo)val_peek(0).obj);}
 break;
 case 16:
-//#line 117 "ejemplo2.y"
+//#line 113 "ejemplo2.y"
 {yyval.obj = new Nodo((Nodo)val_peek(2).obj,"/",(Nodo)val_peek(0).obj);}
 break;
 case 17:
-//#line 118 "ejemplo2.y"
-{System.out.println("entre term");
+//#line 114 "ejemplo2.y"
+{
                               yyval.obj = val_peek(0).obj;
                              }
 break;
 case 18:
-//#line 124 "ejemplo2.y"
+//#line 120 "ejemplo2.y"
 {yyval.obj = (Nodo)val_peek(1).obj;}
 break;
 case 19:
-//#line 125 "ejemplo2.y"
+//#line 121 "ejemplo2.y"
 {
-                              System.out.println("factor id" + val_peek(0).sval);
                               simbolos.put(val_peek(0).sval,0.0);
                               yyval.obj = new Nodo("ID",val_peek(0).sval);
                              }
 break;
 case 20:
-//#line 130 "ejemplo2.y"
+//#line 125 "ejemplo2.y"
 {
-                              System.out.println("factor num");
                               yyval.obj = new Nodo("NUM",val_peek(0).dval);
                               }
 break;
-//#line 583 "Parser.java"
+//#line 555 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

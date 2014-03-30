@@ -35,12 +35,10 @@ public class Interprete{
 
 	void parseAsig(Nodo nodo,Hashtable<String, Double> simbolos){
 		String id = nodo.getLeftChild().getID();
-		System.out.println("Asigne "+ id + "el valor de "+ parseExpr(nodo.getRightChild(),simbolos));
 		simbolos.put(id, parseExpr(nodo.getRightChild(),simbolos));
 	}
 	
 	void parsePrint(Nodo nodo,Hashtable<String, Double> simbolos){
-		System.out.println("Print");
 		System.out.println(nodo.getLeftChild().getID() + " vale : "+simbolos.get(nodo.getLeftChild().getID()));
 	}
 	
@@ -66,19 +64,15 @@ public class Interprete{
 	void parseStmt(Nodo nodo,Hashtable<String, Double> simbolos){
 		switch (nodo.getKind()){
 		case ":=":
-			System.out.println("caso asig");
 			parseAsig(nodo,simbolos);
 			break;
 		case "IF":
-			System.out.println("caso if");
 			parseIf(nodo,simbolos);
 			break;
 		case "PRINT":
-			System.out.println("caso print");
 			parsePrint(nodo,simbolos);
 			break;
 		case "READ":
-			System.out.println("caso read");
 			parseRead(nodo,simbolos);
 			break;
 		default:
@@ -116,7 +110,6 @@ public class Interprete{
 	void parseRead(Nodo nodo,Hashtable<String, Double> simbolos){
 		String id = nodo.getLeftChild().getID();
 		Scanner in = new Scanner(System.in);
-		System.out.println("Pase del escaner");
 		System.out.println("Inserta valor de " + id + ": ");
         Double miValor = in.nextDouble();
         simbolos.put(id, miValor);
