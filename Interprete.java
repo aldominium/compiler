@@ -39,7 +39,12 @@ public class Interprete{
 	}
 	
 	void parsePrint(Nodo nodo,Hashtable<String, Double> simbolos){
-		System.out.println(nodo.getLeftChild().getID() + " vale : "+simbolos.get(nodo.getLeftChild().getID()));
+		//System.out.println(nodo.getLeftChild().getID() + " vale : "+simbolos.get(nodo.getLeftChild().getID()));
+		if (nodo.getLeftChild().getKind() == "ID") {
+			System.out.println(nodo.getLeftChild().getID() + " vale : "+simbolos.get(nodo.getLeftChild().getID()));
+		}else{
+			System.out.println("La expresión es igual a: " + parseExpr(nodo.getLeftChild(),simbolos));
+		}
 	}
 	
 	boolean parseExpresion(Nodo nodo, Hashtable<String, Double> simbolos){
