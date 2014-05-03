@@ -1,0 +1,63 @@
+program x;
+var x:float;
+var y:float 
+
+function suma (num1 : float; num2 : float) : float 
+begin
+	suma := num1 + num2
+end;
+
+function resta (num1 : float; num2 : float) : float 
+begin 
+	resta := num1 - num2 
+end;
+
+function multiplica (num1 : float; num2 : float) : float 
+begin
+	while (num2 > 1) do
+		begin
+			multiplica := suma(num1,num1);
+			num2 := num2 - 1
+		end
+end;
+
+function divide (num1 : float; num2 : float) : float 
+begin
+	divide := num1 / num2
+end;
+
+function reduceCero (num5 : float) : float 
+begin 
+	if (num5 > 0) then
+	begin
+		print num5;
+		num5 := suma(num5,2);
+		print num5
+	end;
+	reduceCero := num5
+end
+
+begin
+	read x;
+
+	if ((x > 10) & (x = 14)) then
+		begin
+			print x;
+			print y
+		end;
+
+	while (x>1)do
+		begin
+			print x;
+			x := resta(x,1)
+		end;
+
+	read y;
+	y := suma(y,1);
+	print y;
+	y := multiplica(y,2);
+	print y;
+	y := divide(y,2);
+	print y
+
+end.
