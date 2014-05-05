@@ -231,6 +231,15 @@ public class TablaSimbolos {
 		}	
 		return false;	
 	}
+
+	public boolean existeFuncion(String id,int numeroParametros){
+		for(int i = obtenerNumeroVariables(); i<this.tipoId.size();i++){
+			if(this.id.get(i).equals(id) && this.numParams.get(i) == numeroParametros){
+				return true;		
+			}		
+		}	
+		return false;	
+	}
 	
 	public void cambiarValorFuncion(String id,double valor){
 		if(existeFuncion(id)){

@@ -53,15 +53,7 @@ public class Interprete{
 			case "&":
 				return parseOpLog(nodo,funId);
 			case "call":
-				if (funId == null) {//es llamada desde el cuerpo principal de la funcion
-					//System.out.println("funid null de parseexpr");
-					funId = nodo.getLeftChild().getID();
-					return parseFun(nodo,funId,null);
-				}else{//Llamada dentro de una funcion
-					String funPadre = funId;
-					funId = nodo.getLeftChild().getID();
-					return parseFun(nodo,funId,funPadre);
-				}
+				return parseFun(nodo,funId);
 			default:
              throw new IllegalArgumentException("Invalid expresion: " + nodo.getKind());
 		}
@@ -120,9 +112,7 @@ public class Interprete{
 	void parseAsig(Nodo nodo,String funId){
 
 		String nombreVariable = nodo.getLeftChild().getID();
-		//System.out.println("nombre variable asig" + nodo.getLeftChild().getID());
-		//No estamos dentro de una funcion, solo checas y asignas 
-		//en tabla de simbolos global
+		
 		if (funId == null) {
 			//System.out.println("fun null de asig");
 			tablaGlobal.cambiarValorVariable(nombreVariable,parseExpr(nodo.getRightChild(),funId));
@@ -202,13 +192,10 @@ public class Interprete{
 		}
 	}
 
-	//Recorre los stmts divididos por ;
 	void parseStmtLst(Nodo nodo,String funId){
-		//System.out.println("Entre parseStmtLst con funid:" + funId);
 		if(nodo != null){
 			
 			Nodo nodoActual = nodo;
-			//nodoActual.imprimir();
 			parseStmt(nodoActual.getLeftChild(),funId);
 			
 			while(!nodoActual.isLast()){
@@ -220,94 +207,52 @@ public class Interprete{
 		}
 	}
 
-	double parseFun(Nodo nodo, String funId,String funPadre){
+	double parseFun(Nodo nodo, String funId){
 
-		int numeroParametros = nodo.getRightChildNum();
-		if (!tablaGlobal.existeFuncion(funId,numeroParametros)) {
-			System.out.println("No existe una funcion con ese nombre y/o esos parametros");
-			System.exit(-1);
-		}
-		//Parsear los parametros de la tabla local y actualizarlos
-		//Llamar a parseStmtLst de la funcion
-		//Regresar el valor de la funcion
-		//Actualizar valor de la funcion en la tabla global
+	
 		Nodo nodoLocal;
 		TablaSimbolos tablaLocal;
-		if (funPadre == null) {//fue desde el programa, el mismo es el padre
-			funPadre = funId;
-		}
-		//System.out.println("Entre parseFunction");
 		nodoLocal = tablaGlobal.obtenerArbolLocal(funId);
 		tablaLocal = tablaGlobal.obtenerTablaLocal(funId);
-		//System.out.println("Obtuve arboles y tablas locales");
-		//System.out.println(nodoLocal);
+		
 
-		parseParams(nodo.getRightChild(),funId,funPadre);
-		//System.out.println("Parsee params");
+		parseParams(nodo.getRightChild(),funId);
 		parseStmtLst(nodoLocal.getRightChild(),funId);
-		//System.out.println("Parsee stmtlst");
 		return (double)tablaGlobal.obtenerValorFuncion(funId);
 	}
 
-	void parseParams(Nodo nodo, String funId,String funPadre){
+	void parseParams(Nodo nodo, String funId){
 		int numeroParam = 0;
 		if(nodo != null){
 			
 			Nodo nodoActual = nodo;
-			parseParam(nodoActual.getLeftChild(),funId,funPadre,numeroParam);
+			parseParam(nodoActual.getLeftChild(),funId,numeroParam);
 			
 			while(!(nodoActual.getRightChild() == null)){
 				numeroParam++;
 				nodoActual = nodoActual.getRightChild();
-				parseParam(nodoActual.getLeftChild(),funId,funPadre,numeroParam);
+				parseParam(nodoActual.getLeftChild(),funId,numeroParam);
 				
 			}
 			
 		}
 	}
 
-	void parseParam(Nodo nodo, String funId,String funPadre, int numeroParam){
+	void parseParam(Nodo nodo, String funId int numeroParam){
 		
-			//Estamos dentro de una funcion
-			//TablaSimbolos tablaLocal = tablaGlobal.obtenerTablaLocal(nombreFuncionPadre);
-			//tablaLocal.valor.set(numeroP,parseExpr(nodo,funId));
+			
 
 
 
 			TablaSimbolos tablaLocal = tablaGlobal.obtenerTablaLocal(funId);
-			tablaLocal.valor.set(numeroParam,parseExpr(nodo,funPadre));
+			tablaLocal.valor.set(numeroParam,parseExpr(nodo,funId));
 
 
 		
 	}
 	
 	void parseIf(Nodo nodo,String funId){
-		/*System.out.println("Hijo izquierdo");
-		nodo.getLeftChild().imprimir();
-		System.out.println();
-		System.out.println("Hijo Derecho");
-		nodo.getRightChild().imprimir();
-		System.out.println();
-		System.out.println("Hijo Derecho Izquierdo");
-		nodo.getRightChild().getLeftChild().imprimir();
-		System.out.println();
-		System.out.println("Hijo Derecho Izquierdo Izquierdo");
-		nodo.getRightChild().getLeftChild().getLeftChild().imprimir();
-		System.out.println();
-		System.out.println("Hijo Derecho Izquierdo Derecho");
-		nodo.getRightChild().getLeftChild().getRightChild().imprimir();
-		System.out.println();
-		System.out.println("Hijo Derecho Izquierdo Derecho Derecho");
-		nodo.getRightChild().getLeftChild().getRightChild().getRightChild().imprimir();
-		System.out.println();
-		System.out.println();
-		System.out.println("Hijo Derecho Derecho Izquierdo");
-		nodo.getRightChild().getRightChild().getLeftChild().imprimir();
-		System.out.println();
-		System.out.println("Hijo Derecho Derecho Izquierdo Izquierdo");
-		nodo.getRightChild().getRightChild().getLeftChild().getLeftChild().imprimir();
-		System.out.println();*/
-
+		
 
 		if(parseExpr(nodo.getLeftChild(),funId) != 0){
 			if((nodo.getRightChild().getKind().equals(";"))){
@@ -337,10 +282,6 @@ public class Interprete{
 		System.out.println("Inserta valor de " + id + ": ");
         Double miValor = in.nextDouble();
         
-        //No estamos dentro de una funcion
-		if (funId == null) {
-			tablaGlobal.cambiarValorVariable(id,miValor);
-		}else{//Estamos dentro de una funcion
 
 			TablaSimbolos tablaLocal = tablaGlobal.obtenerTablaLocal(id);
 

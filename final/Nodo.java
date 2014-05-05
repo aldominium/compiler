@@ -243,6 +243,23 @@ public class Nodo {
 			return null;
 		}
 	}
+
+	public int getRightChildNum(){
+		int numero = 0;
+		Nodo nodo;
+		if (this.getRightChild() != null) {
+			numero++;
+			nodo = this.getRightChild();
+
+				while(nodo.getRightChild() != null){
+					nodo = nodo.getRightChild();
+					numero++;
+
+				}
+		}
+		
+		return numero;
+	}
 	
 	
 	public String getID(){
